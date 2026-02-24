@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="0" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <data name="DataSourceLabel" xml:space="preserve">
+    <value>Viya</value>
+    <comment>The label shown for this data source in the Power Query credentials dialog.</comment>
+  </data>
+  <data name="ButtonTitle" xml:space="preserve">
+    <value>Viya</value>
+    <comment>The name shown next to the connector icon in the Get Data dialog.</comment>
+  </data>
+  <data name="ButtonHelp" xml:space="preserve">
+    <value>Connect to Viya OData feeds using Personal Access Token authentication</value>
+    <comment>Tooltip shown when hovering over the connector in the Get Data dialog.</comment>
+  </data>
+</root>
