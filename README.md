@@ -33,7 +33,7 @@ This custom connector solves that by:
 1. In Power BI Desktop, click **Get Data** and search for **Viya**
 2. Select **Viya** and click **Connect**
 3. Enter your **tenant name** (e.g. `acme`) — the connector will connect to `https://{tenant}.viya.me/api/shipping/odata/v1`
-4. For non-standard environments (e.g. test or staging), expand the **OData Service URL (Advanced)** field and enter the full URL to override the default
+4. For non-standard environments (e.g. test or staging), expand the **Advanced** section and enter a full URL in the **OData Service URL** field to override the default
 5. When prompted for credentials, enter your **Personal Access Token** in the _Key_ field
 6. Click **Connect** — the navigator will show all available entity sets
 7. Select the entity sets you want and click **Load** (or **Transform Data** to apply filters first)
@@ -78,7 +78,7 @@ No data outside the filter range is transferred.
 
 ## How it works
 
-1. The user enters their **tenant name** in the connector dialog (e.g. `acme`), and optionally a full OData Service URL override for non-standard environments
+1. The user enters their **tenant name** in the connector dialog (e.g. `acme`). An expandable **Advanced** section offers an optional **OData Service URL** field to override the default for non-standard environments
 2. The connector builds the effective OData URL: `https://{tenant}.viya.me/api/shipping/odata/v1`
 3. Power Query prompts for credentials using **Key** authentication — a single text field labelled _Personal Access Token_
 4. At runtime, the connector reads the stored PAT via `Extension.CurrentCredential()[Key]`
@@ -147,7 +147,7 @@ Load the built `Viya.mez` into Power BI Desktop (see [Installation](#installatio
 
 - Verify your tenant name is correct (no spaces, no `.viya.me` suffix — just the short name like `acme`)
 - Check that the PAT is valid and has not expired
-- If connecting to a non-standard environment, ensure the URL override in the **OData Service URL (Advanced)** field is correct
+- If connecting to a non-standard environment, ensure the URL override in the **Advanced** section's **OData Service URL** field is correct
 
 ### "Expression.Error: The key didn't match any rows in the table"
 

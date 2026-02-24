@@ -15,7 +15,7 @@ section Viya;
 
 //
 // Exported function — the public API of this connector.
-// Takes a tenant name (primary) and an optional URL override (advanced), returns a navigation table.
+// Takes a tenant name (primary) and an optional options record (advanced), returns a navigation table.
 //
 [DataSource.Kind="Viya", Publish="Viya.Publish"]
 shared Viya.Feed = Value.ReplaceType(
@@ -25,7 +25,7 @@ shared Viya.Feed = Value.ReplaceType(
 
 //
 // Function type with documentation metadata.
-// tenant is the primary parameter; url is an optional advanced override.
+// tenant is the primary parameter; options is a collapsible "Advanced" record containing url override.
 //
 ViyaFeedType = type function (
     tenant as (type text meta [
@@ -33,10 +33,14 @@ ViyaFeedType = type function (
         Documentation.FieldDescription = "Your Viya tenant name (e.g. 'acme'). The connector will connect to https://{tenant}.viya.me/api/shipping/odata/v1",
         Documentation.SampleValues = {"acme"}
     ]),
-    optional url as (type nullable text meta [
-        Documentation.FieldCaption = "OData Service URL (Advanced)",
-        Documentation.FieldDescription = "Override the default URL. Leave blank for standard Viya connections.",
-        Documentation.SampleValues = {"https://acme.viya.me/api/shipping/odata/v1"}
+    optional options as (type nullable [
+        optional url = (type text meta [
+            Documentation.FieldCaption = "OData Service URL",
+            Documentation.FieldDescription = "Override the default URL to connect to a non-standard environment (e.g. test or staging).",
+            Documentation.SampleValues = {"https://acme.test.viya.me/api/shipping/odata/v1"}
+        ])
+    ] meta [
+        Documentation.FieldCaption = "Advanced"
     ])
 ) as table meta [
     Documentation.Name = "Viya",
@@ -50,19 +54,21 @@ ViyaFeedType = type function (
 
 //
 // Implementation — derives the effective OData URL from the tenant name (or uses the
-// optional url override), then reads the PAT from credentials and passes it as the
-// x-api-pat header via OData.Feed's second parameter (headers record).
+// optional url override from the options record), then reads the PAT from credentials
+// and passes it as the x-api-pat header via OData.Feed's second parameter (headers record).
 //
 // OData.Feed pointed at a service root returns a navigation table automatically
 // by reading $metadata — no need to hardcode entity sets.
 //
-ViyaImpl = (tenant as text, optional url as nullable text) as table =>
+ViyaImpl = (tenant as text, optional options as nullable record) as table =>
     let
-        effectiveUrl = if url <> null and url <> "" then url else "https://" & tenant & ".viya.me/api/shipping/odata/v1",
+        url = if options <> null and Record.HasFields(options, "url") and options[url] <> null and options[url] <> ""
+            then options[url]
+            else "https://" & tenant & ".viya.me/api/shipping/odata/v1",
         pat = Extension.CurrentCredential()[Key],
         headers = [#"x-api-pat" = pat],
         source = OData.Feed(
-            effectiveUrl,
+            url,
             headers,
             [
                 ODataVersion = 4,
@@ -77,15 +83,16 @@ ViyaImpl = (tenant as text, optional url as nullable text) as table =>
 // - Key authentication: shows a single "Personal Access Token" text field in the credentials dialog.
 // - TestConnection: required for On-Premises Data Gateway support (scheduled refresh).
 //   For multi-parameter connectors, dataSourcePath is a JSON string — parse it to extract fields.
+//   With the options record pattern, options is nested as a record under the "options" key.
 //
 Viya = [
     TestConnection = (dataSourcePath) =>
         let
             json = Json.Document(dataSourcePath),
             tenant = json[tenant],
-            url = if Record.HasFields(json, "url") then json[url] else null
+            options = if Record.HasFields(json, "options") then json[options] else null
         in
-            { "Viya.Feed", tenant, url },
+            { "Viya.Feed", tenant, options },
     Authentication = [
         Key = [
             KeyLabel = "Personal Access Token",

@@ -14,7 +14,7 @@
 let
     Source = Viya.Feed("acme"),
     // --- Advanced: connect using a custom URL (e.g. test environment) ---
-    // Source = Viya.Feed("acme", "https://acme.test.viya.me/api/shipping/odata/v1"),
+    // Source = Viya.Feed("acme", [url = "https://acme.test.viya.me/api/shipping/odata/v1"]),
     // Uncomment one of the lines below to test a specific entity set:
     // Consignments = Source{[Name="Consignments"]}[Data],
     // Shipments = Source{[Name="Shipments"]}[Data],
