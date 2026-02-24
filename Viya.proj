@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Cross-platform MSBuild project for building the Viya Power BI connector.
+  A .mez file is simply a ZIP containing the .pq, resources.resx, and icon PNGs.
+
+  Build:  dotnet build Viya.proj
+  Clean:  dotnet build Viya.proj -t:Clean
+  Output: bin/Viya.mez
+-->
+<Project ToolsVersion="Current" DefaultTargets="BuildMez"
+         xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <OutputPath>$(MSBuildProjectDirectory)/bin/</OutputPath>
+    <IntermediateOutputPath>$(MSBuildProjectDirectory)/obj/</IntermediateOutputPath>
+    <MezIntermediatePath>$(IntermediateOutputPath)mez/</MezIntermediatePath>
+    <MezOutputPath>$(OutputPath)$(MSBuildProjectName).mez</MezOutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <MezContent Include="src/Viya.pq" />
+    <MezContent Include="src/resources.resx" />
+    <MezContent Include="src/*.png" />
+  </ItemGroup>
+
+  <Target Name="BuildMez" Inputs="@(MezContent)" Outputs="$(MezOutputPath)">
+    <RemoveDir Directories="$(MezIntermediatePath)" />
+    <Copy SourceFiles="@(MezContent)" DestinationFolder="$(MezIntermediatePath)" />
+    <MakeDir Directories="$(OutputPath)" Condition="!Exists('$(OutputPath)')" />
+    <ZipDirectory SourceDirectory="$(MezIntermediatePath)"
+                  DestinationFile="$(MezOutputPath)" Overwrite="true" />
+    <Message Text="Built connector: $(MezOutputPath)" Importance="high" />
+  </Target>
+
+  <Target Name="Clean">
+    <RemoveDir Directories="$(MezIntermediatePath)" />
+    <Delete Files="$(MezOutputPath)" />
+  </Target>
+
+</Project>
