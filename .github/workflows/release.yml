@@ -14,9 +14,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Build connector
-        run: |
-          chmod +x build.sh
-          ./build.sh
+        run: dotnet build Viya.proj
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2

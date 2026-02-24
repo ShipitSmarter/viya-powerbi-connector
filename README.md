@@ -90,25 +90,16 @@ No data outside the filter range is transferred.
 
 ### Prerequisites
 
-- **Python 3** — required for `build.sh`
-- **OR .NET SDK** — required for `dotnet build Viya.proj`
+- **.NET SDK** — required for `dotnet build Viya.proj`
 - **Power Query SDK for VS Code** (Windows only, optional) — for running test queries interactively
 
 ### Building
 
-Two equivalent build methods are available:
-
-**Shell script (cross-platform, requires Python 3):**
-```bash
-./build.sh
-```
-
-**MSBuild (requires .NET SDK):**
 ```bash
 dotnet build Viya.proj
 ```
 
-Both produce `bin/Viya.mez`.
+Produces `bin/Viya.mez`.
 
 ### Testing
 
@@ -136,7 +127,6 @@ Load the built `Viya.mez` into Power BI Desktop (see [Installation](#installatio
 │   ├── Viya48.png         # Connector icon — 48×48
 │   └── Viya64.png         # Connector icon — 64×64
 ├── Viya.proj          # MSBuild project (cross-platform)
-├── build.sh           # Shell build script (uses Python zipfile)
 ├── .gitignore         # Excludes build artifacts (bin/, obj/)
 └── README.md          # This file
 ```
